@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyqchem"
+version = "0.1.0"
+description = "Orchestrated molecular simulator: XYZ generation, DFT ground-state energies, and statistical mechanics in fixed host frameworks"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Lance Bettinson" }]
+license = { text = "MIT" }
+keywords = [
+  "quantum-chemistry",
+  "dft",
+  "statistical-mechanics",
+  "molecular-dynamics",
+  "xyz",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Chemistry",
+  "Programming Language :: Python :: 3",
+]
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "pyscf>=2.3",
+]
+
+[project.optional-dependencies]
+smiles = ["rdkit>=2023.3"]
+dev = ["pytest>=7", "rdkit>=2023.3"]
+
+[project.scripts]
+pyqchem = "pyqchem.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pyqchem*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: integration tests that run DFT calculations",
+]
