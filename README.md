@@ -1,6 +1,6 @@
 # PyQChem
 
-Orchestrated molecular simulator that connects **XYZ structure generation**, **DFT ground-state energies**, **statistical mechanical property estimation**, and **embedded dynamics** where a molecule evolves in spacetime inside a fixed host framework.
+Based on [research](https://www.proquest.com/openview/3831359f21fb467b83b3573c87ff885b/1?pq-origsite=gscholar&cbl=18750&diss=y) started while studying computational quantum chemistry @ U.C. Berkeley. This is a molecular simulator that connects **XYZ structure generation**, **DFT ground-state energies**, **statistical mechanical property estimation**, and **embedded dynamics** where a molecule evolves in spacetime inside a fixed host framework.
 
 ## Features
 
