@@ -59,6 +59,30 @@ pyqchem --temperature 300 --steps 20 --output-dir output
 python examples/run_water_in_host.py
 ```
 
+## Example structures
+
+`examples/structures/` holds QM-region geometries imported from Q-Chem frequency outputs in [so3-quantum-chemistry](https://github.com/lbettins/so3-quantum-chemistry). Each file tags adsorbate atoms as `substrate` and the surrounding zeolite cluster as `fixed` (the Brønsted acid site stays with the host).
+
+| File | Adsorbate | Host | Source frequency job |
+|------|-----------|------|----------------------|
+| `methane_cha.xyz` | Methane (CH₄), 5 atoms | CHA zeolite QM cluster | `notebooks/healpix-meth/METH-CHA-ALIGNED-freq.out` |
+| `methanol_mfi.xyz` | Methanol (CH₃OH), 6 atoms | MFI zeolite QM cluster | `notebooks/MEOH-MFI/MEOH-MFI.freq.out` |
+| `ethane_cha.xyz` | Ethane (C₂H₆), 8 atoms | CHA zeolite QM cluster | `notebooks/ethcha74/ETH1-CHA-freq.out` |
+| `ethanol_mfi.xyz` | Ethanol (C₂H₅OH), 9 atoms | MFI zeolite QM cluster | `notebooks/ETOH-MFI/ETOH-MFI.freq.out` |
+| `propane_mfi.xyz` | Propane (C₃H₈), 11 atoms | MFI zeolite QM cluster | `notebooks/propmfi74/PROP1-1-MFI-freq.out` |
+
+These are the same adsorbate–zeolite systems used for rotational SO(3) sampling in that project: alkanes and alcohols bound near an Al acid site in CHA or MFI. Only the QM atoms from the QM/MM frequency jobs are retained (typically ~60 atoms), which is a practical size for embedded dynamics and sampling demos here.
+
+```python
+from pyqchem.xyz import read_xyz
+from pyqchem.structure import EmbeddedSystem, HostFramework, Molecule
+
+combined = read_xyz("examples/structures/methanol_mfi.xyz")
+substrate = Molecule(atoms=[a.copy() for a in combined.atoms if a.substrate], name="methanol")
+host = HostFramework(atoms=[a.copy() for a in combined.atoms if not a.substrate], name="mfi")
+system = EmbeddedSystem(substrate=substrate, host=host)
+```
+
 ## Architecture
 
 ```mermaid
