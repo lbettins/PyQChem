@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyqchem"
 version = "0.1.0"
-description = "Orchestrated molecular simulator: XYZ generation, DFT ground-state energies, and statistical mechanics in fixed host frameworks"
+description = "Molecular simulator: XYZ generation, DFT energetics, statistical mechanics, and QM/MM-style dynamics with harmonic potentials in fixed host frameworks"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Lance Bettinson" }]
