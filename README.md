@@ -8,6 +8,7 @@ Based on [research](https://www.proquest.com/openview/3831359f21fb467b83b3573c87
 - **Structure builders** — water geometry, SMILES embedding (optional RDKit), silica host tetrahedron
 - **DFT (PySCF)** — ground-state energy and harmonic frequencies via configurable functional/basis
 - **Statistical mechanics** — RRHO partition functions and thermodynamic properties (U, H, S, G, Cp)
+- **Variational rotational Hamiltonian** — Torch build/diagonalize of the Wigner-basis rigid-rotor Schrödinger problem from `a_LMK` coefficients (eigenvalues, Q, U, H, S, Cp)
 - **Embedded dynamics** — Langevin integration of substrate atoms with a frozen host framework
 - **Orchestrator** — single pipeline tying electronic structure, thermodynamics, and spacetime evolution together
 
@@ -101,6 +102,7 @@ flowchart LR
 | `pyqchem.structure` | Atoms, molecules, host frameworks, embedded systems |
 | `pyqchem.dft` | PySCF ground-state DFT and Hessian frequencies |
 | `pyqchem.statmech` | RRHO partition functions and thermodynamics |
+| `pyqchem.variational_hamiltonian` | Wigner-basis rotational Hamiltonian (Torch) and spectrum thermodynamics |
 | `pyqchem.internal_coords` | Wilson B-matrix, stretch/bend/torsion/rotation primitives, Hessian projection |
 | `pyqchem.translation` | Cubic-grid rigid translations `(delta_x, delta_y, delta_z)` |
 | `pyqchem.sampling` | 1-D energy slices along stretch, bend, torsion, and rotation coordinates |
@@ -141,6 +143,26 @@ from pyqchem import InternalModeSampler, SamplingSettings
 sampler = InternalModeSampler(water, analysis, reference_energy_hartree=dft.energy_hartree)
 result = sampler.sample_all(SamplingSettings(lebedev_points=26, n_chi=36, n_translation=11))
 translations = result.translations.samples
+```
+
+### Variational Wigner-basis Hamiltonian
+
+Build and diagonalize the rigid-rotor Hamiltonian in the `|lmk>` basis from Wigner `a_LMK` coefficients (Torch), then evaluate rotational thermodynamics:
+
+```python
+import numpy as np
+from pyqchem import solve_variational_hamiltonian
+
+# Free rotor: empty coeffs. With a potential, pass complex a_LMK (nested L, M, K).
+moments = np.array([3.0, 3.0, 3.0])  # Ix, Iy, Iz in amu·Å²
+result = solve_variational_hamiltonian(
+    lmax=4,
+    moments_amu_a2=moments,
+    temperature_k=300.0,
+    coeffs=None,
+    symmetry_number=1,
+)
+print(result.q, result.entropy_j_mol_k, result.heat_capacity_j_mol_k)
 ```
 
 ## Tests
